@@ -10,17 +10,18 @@ with open("config.json", "r") as f:
     config = json.load(f)
 
 # Initialize
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 bot = commands.Bot(
     command_prefix = config["prefix"],
     intents = intents)
 bot.remove_command("help")
 
-for file in os.listdir("./cogs"):
-    if file.endswith(".py"):
-        name = file[:-3]
-        bot.load_extension(f"cogs.{name}")
+async def load_extensions():
+    for file in os.listdir("./cogs"):
+        if file.endswith(".py"):
+            name = file[:-3]
+            await bot.load_extension(f"cogs.{name}")
 
 @bot.event
 async def on_ready():
